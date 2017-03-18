@@ -1092,7 +1092,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -270, y: 130}
+  m_AnchoredPosition: {x: -270, y: 110}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &656536989
@@ -4311,6 +4311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: 1
   player: {fileID: 1169217734}
+  url: http://25.92.54.140/8080
 --- !u!1 &1163740770
 GameObject:
   m_ObjectHideFlags: 0
@@ -4473,7 +4474,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -270, y: 170}
+  m_AnchoredPosition: {x: -270, y: 150}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1197948180
@@ -4557,6 +4558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: 2
   player: {fileID: 1169217734}
+  url: http://25.92.54.140/8080
 --- !u!1 &1271735822
 GameObject:
   m_ObjectHideFlags: 0
@@ -5937,7 +5939,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -270, y: 150}
+  m_AnchoredPosition: {x: -270, y: 130}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2017432741
