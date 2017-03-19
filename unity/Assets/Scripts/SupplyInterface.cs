@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace AssemblyCSharp
 {
-	public class SupplyInterface
+    public class SupplyInterface
 	{
 		private List<Point> points = new List<Point>();
 		private int total = 0;
 		private int found = 0;
+
+		private int world_max_x;
+		private int world_max_z;
+		private int robot_x;
+		private int robot_z;
 
 		public List<Point> Points {
 			get { return this.points; }
@@ -23,22 +27,64 @@ namespace AssemblyCSharp
 			get { return this.found; }
 		}
 
-		public SupplyInterface (float maxX, float maxZ)
+		public int WorldMaxX {
+			get { return this.world_max_x; }
+		}
+
+		public int WorldMaxZ {
+			get { return this.world_max_z; }
+		}
+
+		public int RobotX {
+			get { return this.robot_x; }
+		}
+
+		public int RobotZ {
+			get { return this.robot_z; }
+		}
+
+		public SupplyInterface (float maxX, float maxZ, string mapSupplies, bool random)
 		{
-			System.Random rand = new System.Random();
-			for (int i = 0; i < 45; i++) {
-				int x = rand.Next (1, (int)maxX);
-				int z = rand.Next (1, (int)maxZ);
-				int n = rand.Next (1, 3);
-				int score = -1;
-				if (n == 1) {
-					score = 1;
-					this.total++;
+            // mapSupplies = "{\"points\": [{\"collected\": false, \"r\": 5, \"x\": 908, \"score\": 1, \"y\": 831},{\"collected\": false, \"r\": 5, \"x\": 100, \"score\": -1, \"y\": 200},{\"collected\": true, \"r\": 5, \"x\": 600, \"score\": 1, \"y\": 370}]}";
+			if (!random) {
+				JsonSerializer serializer = new JsonSerializer ();
+				JsonData JSON = JsonConvert.DeserializeObject<JsonData>(mapSupplies);
+
+				robot_x = JSON.robot.x;
+				robot_z = JSON.robot.y;
+				world_max_x = JSON.world.x_max;
+				world_max_z = JSON.world.y_max;
+				foreach (IPoint point in JSON.points) {
+					Point newPoint = new Point (point.x, 0, point.y, point.score, point.collected);
+					points.Add (newPoint);
 				}
-				Point point = new Point (x, z, 0, score);
-				this.points.Add (point);
+			} else {
+				robot_x = 305;
+				robot_z = 212;
+				System.Random rand = new System.Random ();
+				for (int i = 0; i < 45; i++) {
+					int x = rand.Next (1, (int)maxX);
+					int z = rand.Next(1, (int)maxZ);
+					int n = rand.Next (1, 11);
+					int score = -1;
+					if (n < 8) {
+						score = 1;
+						this.total++;
+					}
+					Point point = new Point (x, 0, z, score, false);
+					this.points.Add (point);
+				}
 			}
 		}
+
+		/*public SupplyInterface (float maxX, float maxZ, string mapSupplies)
+		{
+			SupplyInterface (
+				maxX, 
+				maxZ,
+				mapSupplies, 
+				false);
+		}*/
 
 		public int Hit (Vector3 pos) {
 			foreach (Point point in points) {
@@ -79,13 +125,38 @@ namespace AssemblyCSharp
 			get { return this.score; }
 		}
 
-		public Point(int x, int z, int y, int score)
+		public Point(int x, int y, int z, int score, bool collected)
 		{
 			this.x = x;
 			this.y = y;
 			this.z = z;
 			this.score = score;
+			this.collected = collected;
 		}
 	}
 }
 
+interface IRobot {
+	int r { get; set; }
+	int x { get; set; }
+	int y { get; set; }
+}
+
+interface IWorld {
+	int x_max { get; set; }
+	int y_max { get; set; }
+}
+
+interface IPoint {
+	int x { get; set; }
+	int y { get; set; }
+	int r { get; set; }
+	int score { get; set; }
+	bool collected { get; set; }
+}
+
+class JsonData {
+	public IPoint[] points { get; set; }
+	public IRobot robot { get; set; }
+	public IWorld world { get; set; }
+}
