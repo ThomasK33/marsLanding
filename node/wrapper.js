@@ -2,7 +2,7 @@
 
 const mqtt = require("mqtt");
 
-const SERVER = "10.10.10.30";
+const SERVER = "localhost";
 const PORT = 1883;
 
 const PLAYER_NAME = "oculUS";
@@ -28,7 +28,7 @@ class Wrapper {
 		});
 
 		this.client.on("message", (topic, message) => {
-			// console.log(topic);
+			console.log(topic);
 			var obj = JSON.parse(message.toString());
 			// console.log(obj);
 

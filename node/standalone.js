@@ -1,8 +1,6 @@
 const PF = require("pathfinding");
 const wrapper = new (require("./wrapper"));
 
-
-
 const stateEnum = {
 	INIT: 1,
 	LOCKED: 2,
@@ -15,9 +13,7 @@ const directionEnum = {
 	RIGHT: 1,
 	BOTTOM: 2,
 	LEFT: 3
-}
-
-;
+};
 
 class Robot {
 	constructor(timeLimit=30000){
@@ -65,6 +61,11 @@ class Robot {
 		wrapper.sendControl("reset");
 	}
 }
+
+let state = stateEnum.INIT;
+let path = [];
+
+const rover = new Robot();
 
 function gcun(gamestate){
 	let robot = gamestate.robot;
@@ -182,16 +183,16 @@ function closestWay(gamestate) {
 }
 
 function findDirection(cp, robot) {
-	if (robot.x - cp.x < 0)
+	if (robot.x - cp[0] < 0)
 		return directionEnum.RIGHT;
-	else if (robot.x - cp.x > 0)
+	else if (robot.x - cp[0] > 0)
 		return directionEnum.LEFT;
-	else if (robot.y - cp.y < 0)
+	else if (robot.y - cp[1] < 0)
 		return directionEnum.TOP;
-	else if (robot.y - cp.y > 0)
+	else if (robot.y - cp[1] > 0)
 		return directionEnum.BOTTOM;
 	else
-		return -1;
+		return rover.direction;
 }
 
 function navigateToCP (cp, gs){
@@ -201,14 +202,17 @@ function navigateToCP (cp, gs){
 
 	let speed = (robot.x - cp[0]) != 0 ? robot.x - cp[0] : robot.y - cp[1];
 
-	rover.turn(direction).then(() => rover.move(speed));
+	console.log(speed);
+	console.log();
+
+	rover.turn(direction).then(() => {
+		if (speed > 0)
+			rover.move(speed);
+	});
 	// rover.waitUntilTurned(direction).then(() => {});
 }
 
-let state = stateEnum.INIT;
-let path = [];
 
-const rover = new Robot();
 
 wrapper.onGamestateUpdate().then((gamestate) => {
 	if (state === stateEnum.INIT || state == stateEnum.IDLE) {
