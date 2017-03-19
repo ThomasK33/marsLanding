@@ -28,7 +28,7 @@ class Wrapper {
 		});
 
 		this.client.on("message", (topic, message) => {
-			console.log(topic);
+			// console.log(topic);
 			var obj = JSON.parse(message.toString());
 			// console.log(obj);
 
@@ -118,7 +118,7 @@ class Wrapper {
 			let obj = {"command": command};
 
 			if (command != "stop" && command != "reset")
-				obj["args"] = parseInt(args);
+				obj["args"] = args;
 
 			this.client.publish("robot/process", JSON.stringify(obj));
 			resolve();
