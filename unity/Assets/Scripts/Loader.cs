@@ -28,6 +28,6 @@ public class Loader : MonoBehaviour {
 		gameManager.mainSphere = GameObject.FindGameObjectWithTag ("mainSphere");
 		//StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/players/oculUS/game")));
 		//while (mapSupplies.Length == 0) ;
-		gameManager.Setup (mapSupplies);
+		gameManager.Setup ("");
 	}
 }
