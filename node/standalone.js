@@ -1,6 +1,71 @@
 const PF = require("pathfinding");
 const wrapper = new (require("./wrapper"));
 
+
+
+const stateEnum = {
+	INIT: 1,
+	LOCKED: 2,
+	IDLE: 3,
+	FINISHED: 4
+};
+
+const directionEnum = {
+	TOP: 0,
+	RIGHT: 1,
+	BOTTOM: 2,
+	LEFT: 3
+}
+
+;
+
+class Robot {
+	constructor(timeLimit=30000){
+		this.useTimeLimit = !!timeLimit; 		
+		this.timeLimit = timeLimit;
+
+		this.direction = directionEnum.RIGHT;
+
+		wrapper.onHardwareUpdate().then((hr) => {
+			this.hardware = hr;
+		});
+	}
+
+	turn(dir){
+		return new Promise((resolve) => {
+			if (this.direction === dir) 
+				resolve();
+			else if (dir - this.direction === 1) 
+				wrapper.sendControl("right", 90).then(resolve);
+			else if (dir - this.direction === -1)
+				wrapper.sendControl("left", 90).then(resolve);
+			else
+				wrapper.sendControl("right", 180).then(resolve);
+		});
+	}
+
+	move(speed){
+		return new Promise((resolve) => {
+			let command;
+
+			if (speed > 0)
+				command = "forward";
+			else
+				command = "backward";
+
+			wrapper.sendControl(command, Math.abs(speed)).then(resolve);
+		});
+	}
+
+	stop() {
+		wrapper.sendControl("stop");
+	}
+
+	reset() {
+		wrapper.sendControl("reset");
+	}
+}
+
 function gcun(gamestate){
 	let robot = gamestate.robot;
 
@@ -116,17 +181,59 @@ function closestWay(gamestate) {
 	return {path: path, cn: closestNode};
 }
 
-function navigateToCW (cw){
-	let path = cw.path;
-	let closestNode = cw.cn;
-
-	console.log(path);
+function findDirection(cp, robot) {
+	if (robot.x - cp.x < 0)
+		return directionEnum.RIGHT;
+	else if (robot.x - cp.x > 0)
+		return directionEnum.LEFT;
+	else if (robot.y - cp.y < 0)
+		return directionEnum.TOP;
+	else if (robot.y - cp.y > 0)
+		return directionEnum.BOTTOM;
+	else
+		return -1;
 }
 
+function navigateToCP (cp, gs){
+	let robot = gs.robot;
+
+	let direction = findDirection(cp, robot);
+
+	let speed = (robot.x - cp.x) != 0 ? robot.x - cp.x : robot.y - cp.y;
+
+	rover.turn(direction).then(() => rover.move(speed));
+	// rover.waitUntilTurned(direction).then(() => {});
+}
+
+let state = stateEnum.INIT;
+let path = [];
+
+const rover = new Robot();
+
 wrapper.onGamestateUpdate().then((gamestate) => {
-	let cw = closestWay(gamestate);
-	navigateToCW(cw);
+	if (state === stateEnum.INIT || state == stateEnum.IDLE) {
+		state = stateEnum.LOCKED;
+
+		path = closestWay(gamestate).path;
+
+		navigateToCP(path.shift(), gamestate);
+	} else if (state === stateEnum.LOCKED) {
+		if (path.length == 0) {
+			state = stateEnum.IDLE;
+		} else {
+			navigateToCP(path.shift(), gamestate);
+		}
+
+	} else if (state === stateEnum.FINISHED) {
+		console.log("Execution finishes here");
+	}
 });
+
+wrapper.onFinish().then(() => {
+	state = stateEnum.FINISHED;
+});
+
 
 // Register at the counter party and immediately start a session
 wrapper.sendRegister().then(() => wrapper.sendStart());
+

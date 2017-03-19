@@ -30,13 +30,15 @@ class Wrapper {
 		this.client.on("message", (topic, message) => {
 			console.log(topic);
 			var obj = JSON.parse(message.toString());
-			console.log(obj);
+			// console.log(obj);
 
 			if (topic == "players/" + PLAYER_NAME + "/incoming" && obj.command == "start") {
 				this.started = true;
 			}
 			else if (topic == "players/" + PLAYER_NAME + "/incoming" && obj.command == "finished") {
 				this.finished = true;
+				if (this.finishedFn)
+					this.finishedFn(obj);
 			}
 			else if (topic == "players/" + PLAYER_NAME + "/game") {
 				if (this.gamestateUpdateFn)
@@ -118,7 +120,8 @@ class Wrapper {
 			if (command != "stop" && command != "reset")
 				obj["args"] = parseInt(args);
 
-			this.client.publish("robot/process", JSON.stringify(obj), resolve);
+			this.client.publish("robot/process", JSON.stringify(obj));
+			resolve();
 		});
 	}
 
@@ -141,6 +144,12 @@ class Wrapper {
 	onError() {
 		return new Promise((resolve) => {
 			this.errorFn = resolve;
+		});
+	}
+
+	onFinish() {
+		return new Promise(resolve => {
+			this.finishedFn = resolve;
 		});
 	}
 }

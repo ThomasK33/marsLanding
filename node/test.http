@@ -10,7 +10,7 @@ GET http://localhost:8080/start HTTP/1.1
 
 ###
 
-GET http://localhost:8080/command/forward/1000 HTTP/1.1
+GET http://localhost:8080/command/forward/100 HTTP/1.1
 
 ###
 
