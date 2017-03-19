@@ -10,6 +10,11 @@ namespace AssemblyCSharp
 		private int total = 0;
 		private int found = 0;
 
+		private int world_max_x;
+		private int world_max_z;
+		private int robot_x;
+		private int robot_z;
+
 		public List<Point> Points {
 			get { return this.points; }
 		}
@@ -22,23 +27,33 @@ namespace AssemblyCSharp
 			get { return this.found; }
 		}
 
+		public int WorldMaxX {
+			get { return this.world_max_x; }
+		}
 
-        public class MapRobot
-        {
-            public bool collected;
-            public int r;
-            public int x;
-            public int score;
-            public int y;
-        }
+		public int WorldMaxZ {
+			get { return this.world_max_z; }
+		}
+
+		public int RobotX {
+			get { return this.robot_x; }
+		}
+
+		public int RobotZ {
+			get { return this.robot_z; }
+		}
 
         public SupplyInterface (float maxX, float maxZ, string mapSupplies)
 		{
-            mapSupplies = "{\"points\": [{\"collected\": false, \"r\": 5, \"x\": 908, \"score\": 1, \"y\": 831},{\"collected\": false, \"r\": 5, \"x\": 100, \"score\": -1, \"y\": 200},{\"collected\": true, \"r\": 5, \"x\": 600, \"score\": 1, \"y\": 370}]}";
-            List<MapRobot> steps = JsonConvert.DeserializeObject<List<MapRobot>>(mapSupplies);
+            // mapSupplies = "{\"points\": [{\"collected\": false, \"r\": 5, \"x\": 908, \"score\": 1, \"y\": 831},{\"collected\": false, \"r\": 5, \"x\": 100, \"score\": -1, \"y\": 200},{\"collected\": true, \"r\": 5, \"x\": 600, \"score\": 1, \"y\": 370}]}";
+            
 			JsonSerializer serializer = new JsonSerializer ();
 			IJSON JSON = serializer.Deserialize (new JsonReader (mapSupplies));
 
+			robot_x = JSON.robot.x;
+			robot_z = JSON.robot.y;
+			world_max_x = JSON.world.x_max;
+			world_max_z = JSON.world.y_max;
 			foreach (IPoint point in JSON.points) {
 				Point newPoint = new Point(point.x, 0, point.y, point.score, point.collected);
 				points.Add (newPoint);
@@ -95,6 +110,17 @@ namespace AssemblyCSharp
 	}
 }
 
+interface IRobot {
+	int r { get; set; }
+	int x { get; set; }
+	int y { get; set; }
+}
+
+interface IWorld {
+	int x_max { get; set; }
+	int y_max { get; set; }
+}
+
 interface IPoint {
 	int x { get; set; }
 	int y { get; set; }
@@ -105,4 +131,6 @@ interface IPoint {
 
 interface IJSON {
 	IPoint[] points { get; set; }
+	IRobot robot { get; set; }
+	IWorld world { get; set; }
 }
