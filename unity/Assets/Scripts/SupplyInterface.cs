@@ -43,21 +43,43 @@ namespace AssemblyCSharp
 			get { return this.robot_z; }
 		}
 
-        public SupplyInterface (float maxX, float maxZ, string mapSupplies)
+		public SupplyInterface (float maxX, float maxZ, string mapSupplies, bool random)
 		{
             // mapSupplies = "{\"points\": [{\"collected\": false, \"r\": 5, \"x\": 908, \"score\": 1, \"y\": 831},{\"collected\": false, \"r\": 5, \"x\": 100, \"score\": -1, \"y\": 200},{\"collected\": true, \"r\": 5, \"x\": 600, \"score\": 1, \"y\": 370}]}";
-            
-			JsonSerializer serializer = new JsonSerializer ();
-			IJSON JSON = serializer.Deserialize (new JsonReader (mapSupplies));
+			if (!random) {
+				JsonSerializer serializer = new JsonSerializer ();
+				IJSON JSON = serializer.Deserialize (new JsonReader (mapSupplies));
 
-			robot_x = JSON.robot.x;
-			robot_z = JSON.robot.y;
-			world_max_x = JSON.world.x_max;
-			world_max_z = JSON.world.y_max;
-			foreach (IPoint point in JSON.points) {
-				Point newPoint = new Point(point.x, 0, point.y, point.score, point.collected);
-				points.Add (newPoint);
+				robot_x = JSON.robot.x;
+				robot_z = JSON.robot.y;
+				world_max_x = JSON.world.x_max;
+				world_max_z = JSON.world.y_max;
+				foreach (IPoint point in JSON.points) {
+					Point newPoint = new Point (point.x, 0, point.y, point.score, point.collected);
+					points.Add (newPoint);
+				}
+			} else {
+				robot_x = 305;
+				robot_z = 212;
+				System.Random rand = new System.Random ();
+				for (int i = 0; i < 45; i++) {
+					int x = rand.Next (1, (int)maxX);
+					int z = rand.Next(1, (int)maxZ);
+					int n = rand.Next (1, 11);
+					int score = 1;
+					if (n < 8) {
+						score = 1;
+						this.total++;
+					}
+					Point point = new Point (x, 0, z, score, false);
+					this.points.Add (point);
+				}
 			}
+		}
+
+		public SupplyInterface (float maxX, float maxZ, string mapSupplies)
+		{
+			SupplyInterface (maxX, maxZ, mapSupplies, false);
 		}
 
 		public int Hit (Vector3 pos) {
