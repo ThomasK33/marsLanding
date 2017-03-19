@@ -1,6 +1,8 @@
 ﻿using AssemblyCSharp;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,38 +10,39 @@ public class Move : MonoBehaviour {
     private Robot robot;
     public OVRInput.Controller Controller;
     public GameObject player;
-    public string url = "http://25.92.54.140/8080";
+    string url = "https://www.google.com/";
+    WWW www;
     void Start () {
         this.robot = new Robot(player);
+        www = new WWW(url);
 
-        StartCoroutine(GetText());
     }
 
-    IEnumerator GetText()
-    {
-        UnityWebRequest www = UnityWebRequest.Get(url);
-        yield return www.Send();
+    //IEnumerator WaitForRequest(WWW www)
+    //{
+    //    yield return www;
 
-        if (www.isError)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            // Show results as text
-            Debug.Log(www.downloadHandler.text);
-        }
-    }
+    //    // check for errors
+    //    if (www.error == null)
+    //    {
+    //        Debug.Log(www.data);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("Error: " + www.error);
+    //    }
+    //}
+
 
     void Update ()
     {
-
         OVRInput.Update();
-        StartCoroutine(GetText());
+
+        //StartCoroutine(WaitForRequest(www));
         if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger) && OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger))
         {
             Debug.Log(OVRInput.GetLocalControllerPosition(Controller).x);
-            if (OVRInput.GetLocalControllerPosition(Controller).x < -0.4)
+            if (OVRInput.GetLocalControllerPosition(Controller).x < -0.1)
             {
                 player.transform.Rotate(0, -50 * Time.deltaTime, 0);
                 //SEND mqtt turn left
@@ -49,12 +52,12 @@ public class Move : MonoBehaviour {
                 player.transform.Rotate(0, 50 * Time.deltaTime, 0);
                 //SEND mqtt turn right
             }
-            else if (OVRInput.GetLocalControllerPosition(Controller).x <= 0.2 && OVRInput.GetLocalControllerPosition(Controller).x >= 0.0 && OVRInput.GetLocalControllerPosition(Controller).z >= 0.0)
+            else if (OVRInput.Get(OVRInput.Button.One))
             {
                 player.transform.Rotate(0, 50 * Time.deltaTime, 0);
                 //SEND mqtt forward
             }
-            else if (OVRInput.GetLocalControllerPosition(Controller).x <= 0.2 && OVRInput.GetLocalControllerPosition(Controller).x >= 0.0 && OVRInput.GetLocalControllerPosition(Controller).z < 0.0)
+            else if (OVRInput.Get(OVRInput.Button.Three))
             {
                 player.transform.Rotate(0, -50 * Time.deltaTime, 0);
                 //SEND mqtt backward
