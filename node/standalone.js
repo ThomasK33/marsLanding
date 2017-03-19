@@ -199,7 +199,7 @@ function navigateToCP (cp, gs){
 
 	let direction = findDirection(cp, robot);
 
-	let speed = (robot.x - cp.x) != 0 ? robot.x - cp.x : robot.y - cp.y;
+	let speed = (robot.x - cp[0]) != 0 ? robot.x - cp[0] : robot.y - cp[1];
 
 	rover.turn(direction).then(() => rover.move(speed));
 	// rover.waitUntilTurned(direction).then(() => {});

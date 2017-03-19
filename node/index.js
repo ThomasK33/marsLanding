@@ -29,7 +29,7 @@ app.get("/start", (req, res) => {
 });
 
 app.get("/command/:command/:value?", (req, res) => {
-	wrapper.sendControl(req.params.command, req.params.value);
+	wrapper.sendControl(req.params.command, parseInt(req.params.value));
 	res.status(200).send("Success");
 });
 
