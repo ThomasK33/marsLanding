@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace AssemblyCSharp
 {
-	public class SupplyInterface
+    public class SupplyInterface
 	{
 		private List<Point> points = new List<Point>();
 		private int total = 0;
@@ -23,21 +22,24 @@ namespace AssemblyCSharp
 			get { return this.found; }
 		}
 
-		public SupplyInterface (float maxX, float maxZ)
+
+        public class MapRobot
+        {
+            public bool collected;
+            public int r;
+            public int x;
+            public int score;
+            public int y;
+        }
+
+
+        public SupplyInterface (float maxX, float maxZ, string mapSupplies)
 		{
-			System.Random rand = new System.Random();
-			for (int i = 0; i < 45; i++) {
-				int x = rand.Next (1, (int)maxX);
-				int z = rand.Next (1, (int)maxZ);
-				int n = rand.Next (1, 3);
-				int score = -1;
-				if (n == 1) {
-					score = 1;
-					this.total++;
-				}
-				Point point = new Point (x, z, 0, score);
-				this.points.Add (point);
-			}
+            mapSupplies = "{\"points\": [{\"collected\": false, \"r\": 5, \"x\": 908, \"score\": 1, \"y\": 831},{\"collected\": false, \"r\": 5, \"x\": 100, \"score\": -1, \"y\": 200},{\"collected\": true, \"r\": 5, \"x\": 600, \"score\": 1, \"y\": 370}]}";
+            List<MapRobot> steps = JsonConvert.DeserializeObject<List<MapRobot>>(mapSupplies);
+
+
+            //TODO CREATE POINT
 		}
 
 		public int Hit (Vector3 pos) {

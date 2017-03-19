@@ -53,6 +53,6 @@ wrapper.onHardwareUpdate().then((hw) => {
 	hardware = hw;
 });
 
-app.listen(8080, () => {
+app.listen(6666, () => {
 	console.log("Server running at: http://localhost:8080");
 });
