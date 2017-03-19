@@ -54,12 +54,12 @@ public class Move : MonoBehaviour {
             }
             else if (OVRInput.Get(OVRInput.Button.One))
             {
-                player.transform.Rotate(0, 50 * Time.deltaTime, 0);
+                player.transform.position += player.transform.forward * Time.deltaTime * 1;
                 //SEND mqtt forward
             }
             else if (OVRInput.Get(OVRInput.Button.Three))
             {
-                player.transform.Rotate(0, -50 * Time.deltaTime, 0);
+                player.transform.position += player.transform.forward * Time.deltaTime * -1;
                 //SEND mqtt backward
             }
         }
