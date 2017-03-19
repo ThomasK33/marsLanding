@@ -67,7 +67,7 @@ public class SimpleGameManager {
 
         this.supplies = new SupplyInterface (size.x, size.z, mapSupplies);
 		PlaceSupplies ();
-
+		PlaceRobot (this.supplies.RobotX, this.supplies.RobotZ);
 		timer = new Timer (1000);
 		timer.Elapsed += HandleTimer;
 		timer.Start ();
@@ -87,6 +87,17 @@ public class SimpleGameManager {
 			float y = this.terrain.SampleHeight (position);
 			position.y = y + 5f;
 			newPoint.transform.position = position;
+		}
+	}
+
+	private void PlaceRobot(int x, int z) {
+		try {
+			GameObject robot = GameObject.Find ("player");
+			Vector3 newPosition = new Vector3(x, 0.5f, z);
+			newPosition.y = this.terrain.SampleHeight(newPosition) + 5f;
+			robot.transform.position = newPosition;
+		} catch (Exception e) {
+
 		}
 	}
 
