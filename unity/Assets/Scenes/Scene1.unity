@@ -710,6 +710,7 @@ GameObject:
   - component: {fileID: 456101643}
   - component: {fileID: 456101642}
   - component: {fileID: 456101641}
+  - component: {fileID: 456101645}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -723,12 +724,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 456101639}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.049987793, y: 0.45, z: 0.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1169217735}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &456101641
 AudioListener:
@@ -785,6 +786,18 @@ Camera:
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
+--- !u!114 &456101645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 456101639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 935099ce49222974a950a6f5481ab834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  body: {fileID: 1334038916}
 --- !u!1 &515563013
 GameObject:
   m_ObjectHideFlags: 0
@@ -4017,7 +4030,7 @@ Transform:
   - {fileID: 1777965910}
   - {fileID: 1196057566}
   m_Father: {fileID: 1169217735}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -0.041, y: 90.756004, z: 3.137}
 --- !u!1 &861588992
 GameObject:
@@ -4311,7 +4324,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: 1
   player: {fileID: 1169217734}
-  url: http://25.92.54.140/8080
 --- !u!1 &1163740770
 GameObject:
   m_ObjectHideFlags: 0
@@ -4362,13 +4374,13 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1169217734}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 305.66852, y: 18.853806, z: 212.6243}
+  m_LocalPosition: {x: 305.376, y: 18.853806, z: 212.6243}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1263294489}
   - {fileID: 1155732871}
-  - {fileID: 456101640}
   - {fileID: 835584914}
+  - {fileID: 456101640}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4558,7 +4570,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: 2
   player: {fileID: 1169217734}
-  url: http://25.92.54.140/8080
 --- !u!1 &1271735822
 GameObject:
   m_ObjectHideFlags: 0

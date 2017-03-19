@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using AssemblyCSharp;
 using UnityEngine.UI;
@@ -10,6 +9,7 @@ public class SimpleGameManager {
 	protected SimpleGameManager() {
 		
 	}
+    private string mapSupplies;
 	private static SimpleGameManager instance = null;
 
 	public static SimpleGameManager Instance {
@@ -39,14 +39,33 @@ public class SimpleGameManager {
 		get { return secondsRemaining; }
 	}
 
-	public void Setup () {
+    IEnumerator WaitForRequest(WWW www)
+    {
+        yield return www;
+
+        // check for errors
+        if (www.error == null)
+        {
+            mapSupplies = www.data;
+        }
+        else
+        {
+            Debug.Log("Error: " + www.error);
+        }
+    }
+
+    public void Setup () {
 		score = 0;
 		secondsRemaining = 120;
 		this.mainSphere = GameObject.FindGameObjectWithTag ("mainSphere");
         this.mainCrater = GameObject.FindGameObjectWithTag("mainCrater");
 		this.terrain = UnityEngine.Object.FindObjectOfType<Terrain> ();
 		Vector3 size = this.terrain.terrainData.size;
-		this.supplies = new SupplyInterface (size.x, size.z);
+
+        StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/players/oculUS/game")));
+        while (mapSupplies.Length == 0) ;
+
+        this.supplies = new SupplyInterface (size.x, size.z, mapSupplies);
 		PlaceSupplies ();
 
 		timer = new Timer (1000);
