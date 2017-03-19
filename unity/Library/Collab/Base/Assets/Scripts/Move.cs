@@ -16,7 +16,6 @@ public class Move : MonoBehaviour {
     {
 
         OVRInput.Update();
-        Debug.Log(OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger) && OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger));
         if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger) && OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger))
         {
             Debug.Log(OVRInput.GetLocalControllerPosition(Controller).x);

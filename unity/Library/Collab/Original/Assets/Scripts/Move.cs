@@ -1,6 +1,8 @@
 ﻿using AssemblyCSharp;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,55 +10,59 @@ public class Move : MonoBehaviour {
     private Robot robot;
     public OVRInput.Controller Controller;
     public GameObject player;
-    public string url = "http://25.92.54.140/8080";
+    string url = "https://www.google.com/";
+    WWW www;
     void Start () {
         this.robot = new Robot(player);
 
-        StartCoroutine(GetText());
     }
 
-    IEnumerator GetText()
+    IEnumerator WaitForRequest(WWW www)
     {
-        UnityWebRequest www = UnityWebRequest.Get(url);
-        yield return www.Send();
+        yield return www;
 
-        if (www.isError)
+        // check for errors
+        if (www.error == null)
         {
-            Debug.Log(www.error);
+            Debug.Log(www.data);
         }
         else
         {
-            // Show results as text
-            Debug.Log(www.downloadHandler.text);
+            Debug.Log("Error: " + www.error);
         }
     }
 
+
     void Update ()
     {
-
         OVRInput.Update();
-        StartCoroutine(GetText());
+
+       
         if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger) && OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger))
         {
             Debug.Log(OVRInput.GetLocalControllerPosition(Controller).x);
-            if (OVRInput.GetLocalControllerPosition(Controller).x < -0.4)
+            if (OVRInput.GetLocalControllerPosition(Controller).x <= 0)
             {
-                player.transform.Rotate(0, -50 * Time.deltaTime, 0);
+                player.transform.Rotate(0, -25 * Time.deltaTime, 0);
+                StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/left")));
                 //SEND mqtt turn left
             }
-            else if (OVRInput.GetLocalControllerPosition(Controller).x > 0.2)
+            else if (OVRInput.GetLocalControllerPosition(Controller).x > 0)
             {
-                player.transform.Rotate(0, 50 * Time.deltaTime, 0);
+                player.transform.Rotate(0, 25 * Time.deltaTime, 0);
+                StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/right")));
                 //SEND mqtt turn right
             }
-            else if (OVRInput.GetLocalControllerPosition(Controller).x <= 0.2 && OVRInput.GetLocalControllerPosition(Controller).x >= 0.0 && OVRInput.GetLocalControllerPosition(Controller).z >= 0.0)
+            else if (OVRInput.Get(OVRInput.Button.One))
             {
-                player.transform.Rotate(0, 50 * Time.deltaTime, 0);
+                player.transform.position += player.transform.forward * Time.deltaTime * 1;
+                StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/forward")));
                 //SEND mqtt forward
             }
-            else if (OVRInput.GetLocalControllerPosition(Controller).x <= 0.2 && OVRInput.GetLocalControllerPosition(Controller).x >= 0.0 && OVRInput.GetLocalControllerPosition(Controller).z < 0.0)
+            else if (OVRInput.Get(OVRInput.Button.Three))
             {
-                player.transform.Rotate(0, -50 * Time.deltaTime, 0);
+                player.transform.position += player.transform.forward * Time.deltaTime * -1;
+                StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/backward")));
                 //SEND mqtt backward
             }
         }
