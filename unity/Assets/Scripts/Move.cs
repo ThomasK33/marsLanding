@@ -44,25 +44,25 @@ public class Move : MonoBehaviour {
             if (OVRInput.GetLocalControllerPosition(Controller).x <= 0)
             {
                 player.transform.Rotate(0, -25 * Time.deltaTime, 0);
-                StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/left")));
+                //StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/left")));
                 //SEND mqtt turn left
             }
             else if (OVRInput.GetLocalControllerPosition(Controller).x > 0)
             {
                 player.transform.Rotate(0, 25 * Time.deltaTime, 0);
-                StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/right")));
+                //StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/right")));
                 //SEND mqtt turn right
             }
             else if (OVRInput.Get(OVRInput.Button.One))
             {
                 player.transform.position += player.transform.forward * Time.deltaTime * 1;
-                StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/forward")));
+                //StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/forward")));
                 //SEND mqtt forward
             }
             else if (OVRInput.Get(OVRInput.Button.Three))
             {
                 player.transform.position += player.transform.forward * Time.deltaTime * -1;
-                StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/backward")));
+                //StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/backward")));
                 //SEND mqtt backward
             }
         }
