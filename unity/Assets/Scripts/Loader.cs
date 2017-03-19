@@ -26,8 +26,8 @@ public class Loader : MonoBehaviour {
 		gameManager = SimpleGameManager.Instance;
 		gameManager.mainCrater = GameObject.FindGameObjectWithTag ("mainCrater");
 		gameManager.mainSphere = GameObject.FindGameObjectWithTag ("mainSphere");
-		StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/players/oculUS/game")));
-		while (mapSupplies.Length == 0) ;
+		//StartCoroutine(WaitForRequest(new WWW("http://localhost:6666/players/oculUS/game")));
+		//while (mapSupplies.Length == 0) ;
 		gameManager.Setup (mapSupplies);
 	}
 }
