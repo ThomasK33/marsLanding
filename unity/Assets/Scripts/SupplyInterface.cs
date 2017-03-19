@@ -48,7 +48,7 @@ namespace AssemblyCSharp
             // mapSupplies = "{\"points\": [{\"collected\": false, \"r\": 5, \"x\": 908, \"score\": 1, \"y\": 831},{\"collected\": false, \"r\": 5, \"x\": 100, \"score\": -1, \"y\": 200},{\"collected\": true, \"r\": 5, \"x\": 600, \"score\": 1, \"y\": 370}]}";
 			if (!random) {
 				JsonSerializer serializer = new JsonSerializer ();
-				IJSON JSON = serializer.Deserialize (new JsonReader (mapSupplies));
+				JsonData JSON = JsonConvert.DeserializeObject<JsonData>(mapSupplies);
 
 				robot_x = JSON.robot.x;
 				robot_z = JSON.robot.y;
@@ -66,7 +66,7 @@ namespace AssemblyCSharp
 					int x = rand.Next (1, (int)maxX);
 					int z = rand.Next(1, (int)maxZ);
 					int n = rand.Next (1, 11);
-					int score = 1;
+					int score = -1;
 					if (n < 8) {
 						score = 1;
 						this.total++;
@@ -77,10 +77,14 @@ namespace AssemblyCSharp
 			}
 		}
 
-		public SupplyInterface (float maxX, float maxZ, string mapSupplies)
+		/*public SupplyInterface (float maxX, float maxZ, string mapSupplies)
 		{
-			SupplyInterface (maxX, maxZ, mapSupplies, false);
-		}
+			SupplyInterface (
+				maxX, 
+				maxZ,
+				mapSupplies, 
+				false);
+		}*/
 
 		public int Hit (Vector3 pos) {
 			foreach (Point point in points) {
@@ -151,8 +155,8 @@ interface IPoint {
 	bool collected { get; set; }
 }
 
-interface IJSON {
-	IPoint[] points { get; set; }
-	IRobot robot { get; set; }
-	IWorld world { get; set; }
+class JsonData {
+	public IPoint[] points { get; set; }
+	public IRobot robot { get; set; }
+	public IWorld world { get; set; }
 }
